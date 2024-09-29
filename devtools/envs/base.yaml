@@ -1,0 +1,36 @@
+name: pydantic-units
+
+channels:
+  - conda-forge
+
+dependencies:
+
+  - python >=3.10
+  - pip
+
+  - pydantic
+
+  - openmm
+  - openff-units
+
+  # Dev / Testing
+  - setuptools_scm >=8
+
+  - pre-commit
+  - ruff
+
+  - pytest
+  - pytest-mock
+  - pytest-cov
+  - codecov
+
+  # Docs
+  - mkdocs
+  - mkdocs-material
+  - mkdocs-gen-files
+  - mkdocs-literate-nav
+  - mkdocstrings
+  - mkdocstrings-python
+  - griffe <1
+  - black
+  - mike
