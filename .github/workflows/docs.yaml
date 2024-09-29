@@ -7,6 +7,7 @@ on:
 
 jobs:
   deploy-docs:
+    name: Deploy Documentation
 
     runs-on: ubuntu-latest
     container: condaforge/mambaforge:latest
@@ -44,8 +45,8 @@ jobs:
         git fetch --all --prune
 
         make env
-        
+
         sed -i 's/# extensions/extensions/' mkdocs.yml
         make docs-insiders INSIDER_DOCS_TOKEN="${INSIDER_DOCS_TOKEN}"
-        
+
         make docs-deploy VERSION="$VERSION"
