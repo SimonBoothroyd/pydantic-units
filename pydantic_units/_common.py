@@ -57,6 +57,18 @@ def _openmm_quantity_from_str(value: str) -> Quantity:
 
 
 def quantity_validator(value: str | Quantity, expected_units: Unit) -> Quantity:
+    """Validate a string or quantity as a quantity with expected units
+
+    Args:
+        value: The value to validate
+        expected_units: The expected units
+
+    Raises:
+        ValueError: If the value is not a valid quantity or has the wrong units
+
+    Returns:
+        The validated quantity.
+    """
     if isinstance(value, str):
         value = _openmm_quantity_from_str(value)
 
