@@ -11,7 +11,7 @@ def test_pydantic_units():
 
 def _validate_v1_model(model, model_cls):
     model_json = model.json()
-    assert model_json == '{"a": "1.00000000 angstrom", "b": "0.10000000 nanometer"}'
+    assert model_json == '{"a": "1 A", "b": "0.1 nm"}'
 
     model_schema = model.schema()
     assert model_schema == {
@@ -82,7 +82,7 @@ def test_v2():
     model = Model(a=1 * angstrom, b=1 * angstrom)
 
     model_json = model.model_dump_json()
-    assert model_json == '{"a":"1.00000000 angstrom","b":"0.10000000 nanometer"}'
+    assert model_json == '{"a":"1 A","b":"0.1 nm"}'
 
     model_schema = model.model_json_schema()
     assert model_schema == {
@@ -113,7 +113,7 @@ def test_invalid_units():
         a: OpenMMQuantity[angstrom]
 
     with pytest.raises(pydantic.ValidationError):
-        Model(a=1 * kelvin)
+        Model(a=1.0 * kelvin)
 
     with pytest.raises(pydantic.ValidationError):
         Model.model_validate_json('{"a":"1.00000000 kelvin"}')
