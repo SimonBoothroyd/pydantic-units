@@ -16,4 +16,12 @@
          <loc>https://github.com/SimonBoothroyd/pydantic-units/latest/reference/SUMMARY/</loc>
          <lastmod>2024-09-29</lastmod>
     </url>
+    <url>
+         <loc>https://github.com/SimonBoothroyd/pydantic-units/latest/reference/v1/</loc>
+         <lastmod>2024-09-29</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SimonBoothroyd/pydantic-units/latest/reference/v2/</loc>
+         <lastmod>2024-09-29</lastmod>
+    </url>
 </urlset>
