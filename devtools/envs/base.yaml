@@ -9,9 +9,7 @@ dependencies:
   - pip
 
   - pydantic
-
   - openmm
-  - openff-units
 
   # Dev / Testing
   - setuptools_scm >=8
