@@ -638,6 +638,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#deserialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      (De)Serialization
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -680,6 +689,9 @@
 <hr />
 <p>The <code>pydantic-units</code> framework aims to offer a convenient way to work with OpenMM units
 in Pydantic models, in a way that is backwards compatible with both Pydantic v1 and v2.</p>
+<p>It is lightweight and has no dependencies beyond Pydantic and OpenMM. All units that
+are available in OpenMM are supported except for <code>'ampere'</code> whose symbol is <code>'A'</code>,
+which conflicts with the angstrom unit symbol.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">#</a></h2>
 <p>This package can be installed using <code>conda</code> (or <code>mamba</code>, a faster version of <code>conda</code>):</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>mamba<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>pydantic-units
@@ -705,44 +717,80 @@ JSON encoder if the model needs to be serialised to JSON:</p>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">&#39;1.0 angstrom&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">&#39;1.0 nm&#39;</span><span class="p">)</span>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">model</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># &#39;{&quot;a&quot;: &quot;1.0 angstrom&quot;, &quot;b&quot;: &quot;1.0 nm&quot;}&#39;</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># &#39;{&quot;a&quot;: &quot;1 A&quot;, &quot;b&quot;: &quot;1.0 nm&quot;}&#39;</span>
 </span></code></pre></div>
 <h3 id="pydantic-v2">Pydantic V2<a class="headerlink" href="#pydantic-v2" title="Permanent link">#</a></h3>
 <p>Pydantic v2 supports custom fields with custom encoders, so the <code>OpenMMQuantity</code> field
 can be used directly in the model:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span> <span class="nn">openmm.unit</span> <span class="kn">import</span> <span class="n">angstrom</span><span class="p">,</span> <span class="n">nanometer</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span> <span class="nn">openmm</span> <span class="kn">import</span> <span class="n">unit</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">from</span> <span class="nn">pydantic_units</span> <span class="kn">import</span> <span class="n">OpenMMQuantity</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">a</span><span class="p">:</span> <span class="n">OpenMMQuantity</span><span class="p">[</span><span class="n">angstrom</span><span class="p">]</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">b</span><span class="p">:</span> <span class="n">OpenMMQuantity</span><span class="p">[</span><span class="n">nanometer</span><span class="p">]</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">a</span><span class="p">:</span> <span class="n">OpenMMQuantity</span><span class="p">[</span><span class="n">unit</span><span class="o">.</span><span class="n">angstrom</span><span class="p">]</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">b</span><span class="p">:</span> <span class="n">OpenMMQuantity</span><span class="p">[</span><span class="n">unit</span><span class="o">.</span><span class="n">nanometer</span><span class="p">]</span>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">&#39;1.0 angstrom&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">&#39;1.0 nm&#39;</span><span class="p">)</span>
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># OR</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">angstrom</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">nanometer</span><span class="p">)</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">.</span><span class="n">angstrom</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">.</span><span class="n">nanometer</span><span class="p">)</span>
 </span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
 </span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">model</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">()</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># &#39;{&quot;a&quot;: &quot;1.0 angstrom&quot;, &quot;b&quot;: &quot;1.0 nm&quot;}&#39;</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># &#39;{&quot;a&quot;: &quot;1 A&quot;, &quot;b&quot;: &quot;1.0 nm&quot;}&#39;</span>
 </span></code></pre></div>
 <p>Backwards compatibility with Pydantic v1 is also maintained:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">pydantic.v1</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span> <span class="nn">openmm.unit</span> <span class="kn">import</span> <span class="n">Quantity</span><span class="p">,</span> <span class="n">angstrom</span><span class="p">,</span> <span class="n">nanometer</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span> <span class="nn">openmm</span> <span class="kn">import</span> <span class="n">unit</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="kn">from</span> <span class="nn">pydantic_units</span> <span class="kn">import</span> <span class="n">quantity_serializer</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="kn">from</span> <span class="nn">pydantic_units.v1</span> <span class="kn">import</span> <span class="n">OpenMMQuantity</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="n">json_encoders</span> <span class="o">=</span> <span class="p">{</span><span class="n">Quantity</span><span class="p">:</span> <span class="n">quantity_serializer</span><span class="p">}</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="n">json_encoders</span> <span class="o">=</span> <span class="p">{</span><span class="n">unit</span><span class="o">.</span><span class="n">Quantity</span><span class="p">:</span> <span class="n">quantity_serializer</span><span class="p">}</span>
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">a</span><span class="p">:</span> <span class="n">OpenMMQuantity</span><span class="p">[</span><span class="n">angstrom</span><span class="p">]</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">b</span><span class="p">:</span> <span class="n">OpenMMQuantity</span><span class="p">[</span><span class="n">nanometer</span><span class="p">]</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">a</span><span class="p">:</span> <span class="n">OpenMMQuantity</span><span class="p">[</span><span class="n">unit</span><span class="o">.</span><span class="n">angstrom</span><span class="p">]</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">b</span><span class="p">:</span> <span class="n">OpenMMQuantity</span><span class="p">[</span><span class="n">unit</span><span class="o">.</span><span class="n">nanometer</span><span class="p">]</span>
 </span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
 </span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">&#39;1.0 angstrom&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">&#39;1.0 nm&#39;</span><span class="p">)</span>
 </span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="n">model</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># &#39;{&quot;a&quot;: &quot;1.0 angstrom&quot;, &quot;b&quot;: &quot;1.0 nm&quot;}&#39;</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># &#39;{&quot;a&quot;: &quot;1 A&quot;, &quot;b&quot;: &quot;1.0 nm&quot;}&#39;</span>
+</span></code></pre></div>
+<h3 id="deserialization">(De)Serialization<a class="headerlink" href="#deserialization" title="Permanent link">#</a></h3>
+<p>Quantity fields will be serialized into JSON as strings with the unit symbol, e.g.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span> <span class="nn">pydantic_units</span> <span class="kn">import</span> <span class="n">quantity_serializer</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span> <span class="nn">openmm</span> <span class="kn">import</span> <span class="n">unit</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">quantity_serializer</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">.</span><span class="n">angstrom</span><span class="p">))</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># &#39;1 A&#39;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">quantity_serializer</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">unit</span><span class="o">.</span><span class="n">kilojoules_per_mole</span><span class="p">))</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># &#39;1.0 kJ * mol**-1&#39;</span>
+</span></code></pre></div>
+<p>Likewise, when instantiating a field from a string (either through the constructor or
+through parsing JSON), the unit should be specified in the string as either the full
+unit name or the unit symbol:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span> <span class="nn">pydantic_units</span> <span class="kn">import</span> <span class="n">quantity_validator</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">from</span> <span class="nn">openmm</span> <span class="kn">import</span> <span class="n">unit</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">quantity_validator</span><span class="p">(</span><span class="s1">&#39;1.0 angstrom&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">.</span><span class="n">angstrom</span><span class="p">))</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 1.0 A</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">quantity_validator</span><span class="p">(</span><span class="s1">&#39;1.0 A&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">.</span><span class="n">angstrom</span><span class="p">))</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># 1.0 A</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">quantity_validator</span><span class="p">(</span><span class="s1">&#39;1.0 kJ/mol&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">.</span><span class="n">kilojoules_per_mole</span><span class="p">))</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># 1.0 kJ/mol</span>
+</span></code></pre></div>
+<p>The leading <code>*</code> can be either included or omitted, and whitespace is usually ignored:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">pydantic_units</span> <span class="kn">import</span> <span class="n">quantity_validator</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span> <span class="nn">openmm</span> <span class="kn">import</span> <span class="n">unit</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">quantity_validator</span><span class="p">(</span><span class="s1">&#39;1.0 A&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">.</span><span class="n">angstrom</span><span class="p">))</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># 1.0 A</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">quantity_validator</span><span class="p">(</span><span class="s1">&#39;1.0A&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">.</span><span class="n">angstrom</span><span class="p">))</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># 1.0 A</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">quantity_validator</span><span class="p">(</span><span class="s1">&#39;1.0 * A&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">.</span><span class="n">angstrom</span><span class="p">))</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># 1.0 A</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">quantity_validator</span><span class="p">(</span><span class="s1">&#39;1.0*A&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">.</span><span class="n">angstrom</span><span class="p">))</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># 1.0 A</span>
 </span></code></pre></div>
 
 
