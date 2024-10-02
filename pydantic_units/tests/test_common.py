@@ -24,6 +24,7 @@ def test_quantity_serializer(value, expected):
     "value, expected",
     [
         ("2.0 A", 2.0 * unit.angstrom),
+        ("2.0 Å", 2.0 * unit.angstrom),
         ("2.0 angstrom", 2.0 * unit.angstrom),
         ("2.0 kJ/mole", 2.0 * unit.kilojoules_per_mole),
         ("2.0 * A", 2.0 * unit.angstrom),
