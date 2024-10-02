@@ -19,7 +19,10 @@ for __unit in openmm.unit.__dict__.values():
         _UNIT_LOOKUP[__unit.get_name()] = __unit
 
 _UNIT_LOOKUP["amu"] = openmm.unit.atomic_mass_unit
+_UNIT_LOOKUP["Å"] = openmm.unit.angstrom
 del __unit
+
+_VALUE_REGEX = re.compile(r"^([0-9.\-+]+)[ ]*[a-zA-ZÅ(\[]")
 
 
 def _openmm_quantity_from_str(value: str) -> Quantity:
@@ -47,7 +50,7 @@ def _openmm_quantity_from_str(value: str) -> Quantity:
             raise NotImplementedError(node)
 
     value = value.strip()
-    value_match = re.match(r"^([0-9.\-+]+)[ ]*[a-zA-Z(\[]", value)
+    value_match = re.match(_VALUE_REGEX, value)
 
     if value_match:
         split_idx = value_match.regs[-1][-1]
