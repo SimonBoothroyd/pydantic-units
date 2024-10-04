@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://github.com/SimonBoothroyd/pydantic-units/0.0.2/</loc>
+         <lastmod>2024-10-04</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SimonBoothroyd/pydantic-units/0.0.2/development/</loc>
+         <lastmod>2024-10-04</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SimonBoothroyd/pydantic-units/0.0.2/reference/</loc>
+         <lastmod>2024-10-04</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SimonBoothroyd/pydantic-units/0.0.2/reference/SUMMARY/</loc>
+         <lastmod>2024-10-04</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SimonBoothroyd/pydantic-units/0.0.2/reference/v1/</loc>
+         <lastmod>2024-10-04</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/SimonBoothroyd/pydantic-units/0.0.2/reference/v2/</loc>
+         <lastmod>2024-10-04</lastmod>
+    </url>
+</urlset>
