@@ -5,7 +5,7 @@ CONDA_ENV_RUN   = conda run --no-capture-output --name $(PACKAGE_NAME)
 
 TEST_ARGS := -v --cov=$(PACKAGE_DIR) --cov-append --cov-report=term --cov-report=xml --junitxml=unit.xml --color=yes
 
-.PHONY: env lint format test docs docs-deploy docs-insiders
+.PHONY: env lint format test docs docs-deploy
 
 env:
 	mamba create     --name $(PACKAGE_NAME)
@@ -31,7 +31,3 @@ ifndef VERSION
 	$(error VERSION is not set)
 endif
 	$(CONDA_ENV_RUN) mike deploy --push --update-aliases $(VERSION)
-
-docs-insiders:
-	$(CONDA_ENV_RUN) pip install git+https://$(INSIDER_DOCS_TOKEN)@github.com/SimonBoothroyd/mkdocstrings-python.git \
-                    			 git+https://$(INSIDER_DOCS_TOKEN)@github.com/SimonBoothroyd/griffe-pydantic.git@fix-inheritence-static
